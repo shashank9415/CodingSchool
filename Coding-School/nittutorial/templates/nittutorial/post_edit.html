@@ -9,6 +9,10 @@
 		<script>
 			$(document).ready(function() {
 				$("#id_content").Editor();
+			$("#s2").click(function () {
+                    $('#id_content').text($('#id_content').Editor("getText", ["<button>"]));
+                    $('#preview').append($('#id_content').val());
+                });
 			});
 		</script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -17,9 +21,9 @@
 	</head>
 	<body>
     <h1>New post</h1>
-    <form method="POST">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">SUBMIT</button>
-    </form>
+    <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" id="s2" class="save btn btn-default">SUBMIT</button>
+</form>
 </body>
 </html>
