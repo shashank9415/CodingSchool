@@ -75,6 +75,7 @@ def tutorial_new(request):
             print(tutorials)
             return redirect('post_content', title=post.title, id=post.pk)
     else:
+        print("hello")
         form = TutorialForm()
     return render(request, 'nittutorial/post_edit.html', {'form': form})
 
