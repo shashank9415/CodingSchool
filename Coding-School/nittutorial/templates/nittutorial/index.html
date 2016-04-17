@@ -1,0 +1,172 @@
+{% load staticfiles %}
+{% load mkrange %}
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Coding School</title>
+
+    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link href="{% static 'nittutorial/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'nittutorial/css/freelancer.css' %}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{% static 'nittutorial/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{% static 'nittutorial/css/jquery.tagsinput.css' %}" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="{% static 'nittutorial/js/jquery-2.0.0.min.js' %}"></script>
+      <script src="{% static 'nittutorial/js/jquery.tagsinput.js' %}"></script>
+    <script src="{% static 'nittutorial/js/ajax.js' %}"></script>
+  <script type="text/javascript">
+  jQuery(function($) {
+    //alert(document.getElementById('search-text'));
+  $('.tags').tagsInput();
+   });
+</script>
+   <!--  <script src="{% static 'nittutorial/js/tagcreator.js' %}"></script> -->
+
+</head>
+
+<body id="page-top" class="index">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="wrap">
+                    <div>
+                <img class="img-responsive" src="{% static 'nittutorial/images/main.jpg' %}" alt="">
+            </div>
+            <div>
+                <a class="navbar-brand" href="/nittutorial/">Coding School</a>
+            </div>
+                </div>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/forums/">Forums</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/blogs/">Blogs</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/problems_find/">Problems</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/cf_form/">Search User</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/editor/">Editor</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/new/">Write Post</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="wrap">
+                    <div class="content_width-left">
+                    <div class="sidebar-nav" id="side_margin">
+      <div class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <span class="visible-xs navbar-brand">Sidebar menu</span>
+        </div>
+        <div class="navbar-collapse collapse sidebar-navbar-collapse">
+          <ul class="nav navbar-nav" id="horizontal">
+            <li class="active"><a href="/nittutorial/">Tutorial</a></li>
+            {% for tutorial in tutorials %}
+            <li><a href="{% url 'post_content' title=tutorial.title id=tutorial.pk %}">{{ tutorial.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div><!--/.nav-collapse -->
+
+      </div>
+    </div>
+         <div class="row">
+        Tutorial Search
+           <div id="custom-search-input">
+                            <div class="input-group col-md-12">
+                            {% csrf_token %}
+                             <!-- <input type="text" id="search" name="search"/> -->
+                            
+                                 <input type="text" id="search-text" class="tags" name="search" placeholder="Enter tag of problem" value="" required autofocus>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-danger" type="submit" id="mysearch">
+                                        <span class=" glyphicon glyphicon-search"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        
+
+    </div>
+    
+            </div>
+            <div class="content_width">
+        {% block content %}
+        {% endblock %}
+    </div>
+    </div>
+</div>
+    </div>
+</div>
+    </header>
+    <!-- jQuery -->
+    <script src="{% static 'nittutorial/js/jquery.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'nittutorial/js/bootstrap.min.js' %}"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="{% static 'nittutorial/js/classie.js' %}"></script>
+    <script src="{% static 'nittutorial/js/cbpAnimatedHeader.js' %}"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'nittutorial/js/freelancer.js' %}"></script>
+    <UL id="search-results">
+    </UL>
+</body>
+
+</html>
