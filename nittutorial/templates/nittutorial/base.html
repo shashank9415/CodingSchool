@@ -1,0 +1,109 @@
+{% load staticfiles %}
+{% load mkrange %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'nittutorial/css/bootstrap.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'nittutorial/css/rotating-card.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'nittutorial/css/simple-sidebar.css' %}" />
+<!-- <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+ -->  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet " />
+
+  
+</head>
+<body >
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/nittutorial/">
+        CODING SCHOOL
+      </a>
+    </div>
+  </div>
+  <a href="/nittutorial/new/" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+  <div class="margin-navbar-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-top" href="/nittutorial/">
+                Home
+            </a>
+        </div>
+    </div>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-top" href="/forums/">
+        Forums
+      </a>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-top" href="/blogs/">
+        Blogs
+      </a>
+    </div>
+  </div>
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-top" href="/problems_find/">
+                Problems
+            </a>
+        </div>
+    </div>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-top" href="/cf_form/">
+        Search User
+      </a>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-top" href="/editor/">
+        Editor
+      </a>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-top" href="/contact/">
+        Contact
+      </a>
+    </div>
+  </div>
+  </div>
+</nav>    
+<div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="/nittutorial/">
+                        Tutorials
+                    </a>
+                </li>
+                {% for tutorial in tutorials %}
+                <li><a href="{% url 'post_content' title=tutorial.title id=tutorial.pk %}">{{ tutorial.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+
+
+    <div class="row">
+
+        <div class="col-sm-10 col-sm-offset-1">
+        {% block content %}
+        {% endblock %}
+<!--         <div class="col-sm-1"></div> -->
+        </div> <!-- end col-sm-10 --> 
+        
+    </div> <!-- end row -->
+</div>
+    
+</body>
+</html>

@@ -212,7 +212,6 @@ def tutorial_new(request):
             post.save()
             form.save_m2m()
             tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
-            print(tutorials)
             return redirect('post_content', title=post.title, id=post.pk)
     else:
         print("hello")

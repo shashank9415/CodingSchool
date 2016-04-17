@@ -18,7 +18,7 @@ class Tutorial(models.Model):
 	complexity = models.CharField(max_length = 50)
 	authorId = models.IntegerField()
 	rating = models.IntegerField( null = True )
-	content = models.TextField(default="write your content here")
+	content = models.TextField()
 	createdDate = models.DateTimeField(default=timezone.now)
 	publishedDate = models.DateTimeField(blank=True, null=True)
 	tags = TaggableManager()
