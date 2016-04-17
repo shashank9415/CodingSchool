@@ -1,0 +1,33 @@
+{% extends 'nittutorial/index.html' %}
+{% load staticfiles %}
+{% load mkrange %}
+{% block content %}
+<div class="increase-height">
+<form method="post" action="/run/" id="editorid" class="editor-form">
+	{% csrf_token %}
+    <textarea name="code" rows="17" cols="4" form ="editorid" class="form-control" placeholder="Write Code here"></textarea>
+    <<div class="wrap">
+    <div>
+    Select Language  <input list="language" name="language" class="compile-button">
+  <datalist id="language">
+    <option value="C">
+    <option value="CPP">
+    <option value="CPP11">
+    <option value="CLOJURE">
+    <option value="CSHARP">
+    <option value="JAVA">
+    <option value="JAVASCRIPT">
+    <option value="HASKELL">
+    <option value="PERL">
+    <option value="PYTHON">
+    <option value="PHP">
+    <option value="RUBY">
+  </datalist> 
+   </div>
+   <div>
+      <button type="compile" class="compile-button">Compile and Run</button>
+  </div>
+</div>
+</form>
+</div>
+{% endblock %}
