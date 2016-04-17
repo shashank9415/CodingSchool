@@ -1,0 +1,16 @@
+{% extends 'nittutorial/index.html' %}
+{% load staticfiles %}
+{% load mkrange %}
+{% block content %}
+<div class="increase-height">
+	<div id="boundry">
+<form method="post" action="/problems_display/">
+	{% csrf_token %}
+	<p id="side_color">Enter Tag of Problems</p> <br>
+    <input type="text" name="tag" placeholder="Enter tag of problem" value="" required autofocus>
+      <br><br>
+      <button type="submit" class="save btn btn-default">Search</button>
+</form>
+</div>
+</div>
+{% endblock %}

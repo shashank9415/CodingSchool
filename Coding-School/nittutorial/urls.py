@@ -17,9 +17,9 @@ urlpatterns = [
     url(r'^cf_form/',views.cf_form, name='tut1'),
     url(r'^problems_find/',views.problems_find, name='tut1'),
     url(r'^problems_display/',views.problems_display, name='tut1'),
-    url(r'^compile/',views.compile, name='tut1'),
-    url(r'^run/',views.run, name='tut1'),
-    url(r'^editor/',views.editor, name='tut1'),
+    url(r'^compile/',views.compile, name='compile'),
+    url(r'^run/',views.run, name='run'),
+    url(r'^editor/',views.editor, name='editor'),
     url(r'^search/$', views.search_titles,name='tagged'),
     url(r'^tag/(?P<slug>[-\w]+)/$', views.TagIndexView.as_view(),name="tagged1"),
     url(r'^accounts/login/$', views.login_view),
@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'^accounts/logout/$',views.logout_view),
     url(r"^accounts/register/$", views.register_user_account_view),
     url(r"^accounts/register_success/$", views.register_user_account_success_view),
-
+    # ex: /ajSkHb
+    url(r'^(?P<code_id>[-\w]+)$', views.savedCodeView, name='saved-code'),
 ]
