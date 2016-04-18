@@ -11,22 +11,36 @@ from .forms import TutorialForm
 from django.shortcuts import render_to_response
 import requests
 import json 
+import re
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView
 from django.contrib import auth
 from django.core.context_processors import csrf
 from taggit.models import Tag
-
+from django.http import HttpResponse,HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+def user_login_required(f):
+        def wrap(request, *args, **kwargs):
+                if 'user_id' not in request.session.keys():
+                        return HttpResponseRedirect(request.build_absolute_uri('/'))
+                return f(request, *args, **kwargs)
+        wrap.__doc__=f.__doc__
+        wrap.__name__=f.__name__
+        return wrap
+@user_login_required
 def tut1(request):
 	#tutorials = Tutorials.objects.all()
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     #contents = Tutorials.objects.filter(contentId__contentId=12345)
     return render(request, 'nittutorial/check.html', {'tutorials': tutorials})
+@user_login_required
 def forums(request):
     #tutorials = Tutorials.objects.all()
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     #contents = Tutorials.objects.filter(contentId__contentId=12345)
     return render(request, 'nittutorial/forums.html', {'tutorials': tutorials})
+@user_login_required
 def blogs(request):
     #tutorials = Tutorials.objects.all()
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
@@ -100,6 +114,7 @@ def cf_profile(request):
 def cf_form(request):
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     return render(request, 'nittutorial/cf_form.html',{'tutorials': tutorials})
+@user_login_required
 def problems_find(request):
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     return render(request, 'nittutorial/problems_find.html',{'tutorials': tutorials})
@@ -179,8 +194,14 @@ def search_titles(request):
         search_text = request.POST["search-text"]
     else:
         search_text = ""
-    Tutorials =  Tutorial.objects.filter(tags__slug=search_text).distinct()
-    print(Tutorials)
+    print(search_text)
+    search_text=search_text.split(",")
+    #re.split('; |,|\*|\n',search_text)
+    #print(search_text)
+    #for e in search_text:
+    Tutorials =  Tutorial.objects.filter(tags__name__in=search_text).distinct()
+    #print(Tutorials)
+    #print(Tutorials)
     return render(request, "nittutorial/search.html",{"tutorials": Tutorials})
 
 class TagMixin(object):
