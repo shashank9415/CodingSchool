@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $('#mysearch').click(function() {
-        alert($('#search-text').val());
+        //alert($('#search-text').val());
         $.ajax({
             type: "POST",
             url: "/search/",
