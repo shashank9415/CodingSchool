@@ -2,20 +2,23 @@
 {% load staticfiles %}
 {% load mkrange %}
 {% block content %}
-<script type="text/javascript">
-function f(c){
-	var content = c;
-	alert(content);
-document.getElementById("content").innerHTML=content;
-}
-</script>
-<button onclick="f('{{tutorial.content}}')"></button>
 <h1>{{ tutorial.title }}</h1>
-<p id="content" onload="f('{{tutorial.content}}')" ></p>
+<p id="content"></p>
 <h4>{{ tutorial.complexity }}</h4>
 <h4>Rating is : {{ tutorial.rating }}</h4>
 <h4>Publish Date : {{ tutorial.publishedDate }}</h4>
 {% for e in tag %}
 <h1>{{ e }}</h1>
+<script type="text/javascript">
+function f(c){
+	var content=c;
+document.getElementById("content").innerHTML=content;
+var temp = document.createElement("div");
+temp.innerHTML = c;
+var sanitized = temp.textContent || temp.innerText;
+console.log(sanitized)
+}
+window.addEventListener('load',f('{{ tutorial.content }}'));
+</script>
 {% endfor %}
 {% endblock %}
