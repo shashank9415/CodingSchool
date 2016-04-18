@@ -2,8 +2,16 @@
 {% load staticfiles %}
 {% load mkrange %}
 {% block content %}
+<script type="text/javascript">
+function f(c){
+	var content = c;
+	alert(content);
+document.getElementById("content").innerHTML=content;
+}
+</script>
+<button onclick="f('{{tutorial.content}}')"></button>
 <h1>{{ tutorial.title }}</h1>
-<p><pre>{{ tutorial.content }}</pre></p>
+<p id="content" onload="f('{{tutorial.content}}')" ></p>
 <h4>{{ tutorial.complexity }}</h4>
 <h4>Rating is : {{ tutorial.rating }}</h4>
 <h4>Publish Date : {{ tutorial.publishedDate }}</h4>
