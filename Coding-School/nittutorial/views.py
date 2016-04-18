@@ -11,13 +11,16 @@ from .forms import TutorialForm
 from django.shortcuts import render_to_response
 import requests
 import json 
+import re
 from django.http import HttpResponseRedirect
 from django.views.generic import DetailView, ListView
 from django.contrib import auth
 from django.core.context_processors import csrf
 from taggit.models import Tag
 from django.http import JsonResponse, HttpResponseForbidden
-
+from django.http import HttpResponse,HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 import requests, os
 
 
@@ -157,21 +160,39 @@ def savedCodeView(request, code_id):
     # render the index.html
     return render(request, 'nittutorial/editor.html', {})
     
+def user_login_required(f):
+        def wrap(request, *args, **kwargs):
+                if 'user_id' not in request.session.keys():
+                        return HttpResponseRedirect(request.build_absolute_uri('/'))
+                return f(request, *args, **kwargs)
+        wrap.__doc__=f.__doc__
+        wrap.__name__=f.__name__
+        return wrap
+
+@user_login_required
 def tut1(request):
 	#tutorials = Tutorials.objects.all()
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     #contents = Tutorials.objects.filter(contentId__contentId=12345)
     return render(request, 'nittutorial/check.html', {'tutorials': tutorials})
 
+@user_login_required
 def forums(request):
     #tutorials = Tutorials.objects.all()
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     #contents = Tutorials.objects.filter(contentId__contentId=12345)
     return render(request, 'nittutorial/forums.html', {'tutorials': tutorials})
+
+def signup(request):
+    print("hi")
+    return render(request, 'nittutorial/registration1.html')
+
+@user_login_required
 def blogs(request):
     #tutorials = Tutorials.objects.all()
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     #contents = Tutorials.objects.filter(contentId__contentId=12345)
+    print("shashank",request.session["user_id"])
     return render(request, 'nittutorial/blogs.html', {'tutorials': tutorials})
 def contributors(request):
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
@@ -231,6 +252,7 @@ def tutorial_new(request):
             post.save()
             form.save_m2m()
             tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
+            print(tutorials)
             return redirect('post_content', title=post.title, id=post.pk)
     else:
         form = TutorialForm()
@@ -258,6 +280,7 @@ def cf_profile(request):
 def cf_form(request):
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     return render(request, 'nittutorial/cf_form.html',{'tutorials': tutorials})
+@user_login_required
 def problems_find(request):
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     return render(request, 'nittutorial/problems_find.html',{'tutorials': tutorials})
@@ -289,8 +312,14 @@ def search_titles(request):
         search_text = request.POST["search-text"]
     else:
         search_text = ""
-    Tutorials =  Tutorial.objects.filter(tags__slug=search_text).distinct()
-    print(Tutorials)
+    print(search_text)
+    search_text=search_text.split(",")
+    #re.split('; |,|\*|\n',search_text)
+    #print(search_text)
+    #for e in search_text:
+    Tutorials =  Tutorial.objects.filter(tags__name__in=search_text).distinct()
+    #print(Tutorials)
+    #print(Tutorials)
     return render(request, "nittutorial/search.html",{"tutorials": Tutorials})
 
 class TagMixin(object):
@@ -336,6 +365,45 @@ def auth_view(request):
     #user is None
 
     return  redirect("/accounts/invalid")
+def login_user(request):
+    # the following few lines check wether the session is exist already or not, if exist based on session type it redirects to a panel
+    if "usertype" in request.session: #checks session existence
+        usertype_to_redirect=request.session["usertype"] #gets the user type from session
+        #if (usertype_to_redirect=="student"):
+        return render(request,'nittutorial/loggedin.html')  #returns to any one of the above choice based on usertype
+    #the following will checks the type of user and sets session for a user and redierects to respective panel
+    else:
+        c={}
+        c.update(csrf(request))
+        state = "Please log in below..."
+        username =''
+        password = ''
+        if request.POST:
+            username = request.POST.get('username') #receives username from loginpage auth.html
+            password = request.POST.get('password') #receives password from loginpage auth.html
+            request_user = auth.authenticate(username=username, password=password)
+            if request_user is not None:
+                if request_user.is_active:
+                    auth.login(request, request_user)
+                    state = "You're successfully logged in!"
+                   # db = MySQLdb.connect(DatabaseConfig.MYSQL_HOST,DatabaseConfig.MYSQL_USER,DatabaseConfig.MYSQL_PWD,DatabaseConfig.MYSQL_DB )
+                    #cursor = db.cursor()
+                    #query="select is_superuser,id from auth_user where username='"+username+"';" #query to check if user is admin
+                    #cursor.execute(query)
+                    #data=cursor.fetchall()
+                    #db.close()
+                    usertype={}
+                    usertype={"user_type":"admin","user_id":"123"}
+                    request.session["user_id"]=usertype["user_id"]
+                    request.session["username"]=username
+                    request.session["usertype"]=usertype["user_type"]
+                    print ("admin id:",request.session["user_id"])
+                    return redirect("/accounts/loggedin") #redirection url
+                else:
+                    state = "Your account is not active, please contact the site admin."
+            else:
+                state = "Your username and/or password were incorrect."
+        return render_to_response('nittutorial/login.html',{'state':state, 'username': username}) #if it doesn't satisfy any role redirects to home only
 
 def loggedin_view(request):
     return render(request,'nittutorial/loggedin.html', {"full_name": request.user.username})
@@ -344,6 +412,11 @@ def invalid_view(request):
     return  render(request,"nittutorial/invalid_login.html")
 
 def logout_view(request):
+    del request.session["user_id"]
+    del request.session["usertype"]
+    del request.session["username"]
+    request.session.set_expiry(0)   
+    request.session.modified=True
     auth.logout(request)
     return  render(request,"nittutorial/logout.html")
 

@@ -48,8 +48,10 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'nittut.middleware.AutoLogout', 
 ]
 
+AUTO_LOGOUT_DELAY = 5 
 ROOT_URLCONF = 'nittut.urls'
 
 TEMPLATES = [
@@ -81,7 +83,7 @@ DATABASES = {
     }
 }
 
-
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 

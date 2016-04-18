@@ -34,7 +34,7 @@
   <script type="text/javascript">
   jQuery(function($) {
     //alert(document.getElementById('search-text'));
-  $('.tags').tagsInput();
+  $('#search-text').tagsInput();
    });
 </script>
    <!--  <script src="{% static 'nittutorial/js/tagcreator.js' %}"></script> -->
@@ -59,7 +59,7 @@
                 <img class="img-responsive" src="{% static 'nittutorial/images/main.jpg' %}" alt="">
             </div>
             <div>
-                <a class="navbar-brand" href="/nittutorial/">Coding School</a>
+                <a class="navbar-brand" href="/nittutorial/">Coding</a>
             </div>
                 </div>
             </div>
@@ -87,6 +87,12 @@
                     </li>
                     <li class="page-scroll">
                         <a href="/new/">Write Post</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/accounts/login/">Log in</a>
+                    </li>
+                     <li class="page-scroll">
+                        <a href="/accounts/loggedin">Log out</a>
                     </li>
                 </ul>
             </div>
@@ -137,7 +143,7 @@
                             {% csrf_token %}
                              <!-- <input type="text" id="search" name="search"/> -->
                             
-                                 <input type="text" id="search-text" class="tags" name="search" placeholder="Enter tag of problem" value="" required autofocus>
+                                 <input type="text" id="search-text"  name="search" placeholder="Enter tag of problem" value="" required autofocus>
                                 <span class="input-group-btn">
                                     <button class="btn btn-danger" type="submit" id="mysearch">
                                         <span class=" glyphicon glyphicon-search"></span>
