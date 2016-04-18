@@ -162,6 +162,7 @@ def tut1(request):
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     #contents = Tutorials.objects.filter(contentId__contentId=12345)
     return render(request, 'nittutorial/check.html', {'tutorials': tutorials})
+
 def forums(request):
     #tutorials = Tutorials.objects.all()
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
@@ -203,6 +204,24 @@ def post_content(request, title, id):
     print(tag)
     return render(request, 'nittutorial/post_content.html', { 'tutorials': tutorials, 'tutorial': tutorial,'tag':tag})
 
+def post_edit(request, title, id):
+    tutorial = get_object_or_404(Tutorial, pk=id)
+    if request.method=="POST":
+        form = TutorialForm(request.POST, instance=tutorial)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+            form.save_m2m()
+            return redirect('post_content', title=post.title, id=post.pk)
+    else:
+        form = TutorialForm(instance=tutorial)
+    return render(request, 'nittutorial/post_edit.html', {'form': form})
+
+def post_delete(request, title, id):
+    tutorial = get_object_or_404(Tutorial, pk=id)
+    tutorial.delete()
+    return redirect('nittutorial')
+
 def tutorial_new(request):
     if request.method == "POST":
         form = TutorialForm(request.POST)
@@ -214,7 +233,6 @@ def tutorial_new(request):
             tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
             return redirect('post_content', title=post.title, id=post.pk)
     else:
-        print("hello")
         form = TutorialForm()
     return render(request, 'nittutorial/post_edit.html', {'form': form})
 
