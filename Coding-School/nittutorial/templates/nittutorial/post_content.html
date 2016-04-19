@@ -4,7 +4,8 @@
 {% block content %}
 <script type="text/javascript">
 $(document).ready(function(){
-	document.getElementById("content").innerHTML='{{tutorial.content}}';
+	alert('{{tutorial.content}}');
+	$("#content").append('{{tutorial.content}}');
 });
 </script>
 <h1>{{ tutorial.title }}</h1>

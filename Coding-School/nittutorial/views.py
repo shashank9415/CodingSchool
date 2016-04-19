@@ -17,9 +17,149 @@ from django.views.generic import DetailView, ListView
 from django.contrib import auth
 from django.core.context_processors import csrf
 from taggit.models import Tag
+from django.http import JsonResponse, HttpResponseForbidden
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+import requests, os
+
+
+COMPILE_URL = "https://api.hackerearth.com/v3/code/compile/"
+RUN_URL = "https://api.hackerearth.com/v3/code/run/"
+
+# access config variable
+DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
+# DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
+CLIENT_SECRET = "f5110b53452e3f8affd7c593ab6bb48899622a66"
+
+permitted_languages = ["C", "CPP", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]
+
+
+"""
+Check if source given with the request is empty
+"""
+def source_empty_check(source):
+    if source == "":
+        response = {
+            "message" : "Source can't be empty!",
+        }
+        return JsonResponse(response, safe=False)
+
+
+"""
+Check if lang given with the request is valid one or not
+"""
+def lang_valid_check(lang):
+    if lang not in permitted_languages:
+        response = {
+            "message" : "Invalid language - not supported!",
+        }
+        return JsonResponse(response, safe=False)
+
+
+"""
+Handle case when at least one of the keys (lang or source) is absent
+"""
+def missing_argument_error():
+    response = {
+        "message" : "ArgumentMissingError: insufficient arguments for compilation!",
+    }
+    return JsonResponse(response, safe=False)
+
+
+"""
+View catering to /ide/ URL,
+simply renders the index.html template
+"""
+def editor(request):
+    # render the index.html
+    return render(request, 'nittutorial/editor.html', {})
+
+
+"""
+Method catering to AJAX call at /ide/compile/ endpoint,
+makes call at HackerEarth's /compile/ endpoint and returns the compile result as a JsonResponse object
+"""
+def compile(request):
+    if request.is_ajax():
+        try:
+            source = request.POST['source']
+            # Handle Empty Source Case
+            source_empty_check(source)
+            
+            lang = request.POST['lang']
+            # Handle Invalid Language Case
+            lang_valid_check(lang)
+
+        except KeyError:
+            # Handle case when at least one of the keys (lang or source) is absent
+            missing_argument_error()
+
+        else:
+            compile_data = {
+                'client_secret': CLIENT_SECRET,
+                'async': 0,
+                'source': source,
+                'lang': lang,
+            }
+
+            r = requests.post(COMPILE_URL, data=compile_data)
+            return JsonResponse(r.json(), safe=False)
+    else:
+        return HttpResponseForbidden();
+
+
+"""
+Method catering to AJAX call at /ide/run/ endpoint,
+makes call at HackerEarth's /run/ endpoint and returns the run result as a JsonResponse object
+"""
+def run(request):
+    if request.is_ajax():
+        try:
+            source = request.POST['source']
+            # Handle Empty Source Case
+            source_empty_check(source)
+            
+            lang = request.POST['lang']
+            # Handle Invalid Language Case
+            lang_valid_check(lang)
+
+        except KeyError:
+            # Handle case when at least one of the keys (lang or source) is absent
+            missing_argument_error()
+
+        else:
+            # default value of 5 sec, if not set
+            time_limit = request.POST.get('time_limit', 5)
+            # default value of 262144KB (256MB), if not set
+            memory_limit = request.POST.get('memory_limit', 262144)
+
+            run_data = {
+                'client_secret': CLIENT_SECRET,
+                'async': 0,
+                'source': source,
+                'lang': lang,
+                'time_limit': time_limit,
+                'memory_limit': memory_limit,
+            }
+
+            # if input is present in the request
+            if 'input' in request.POST:
+                run_data['input'] = request.POST['input']
+
+            """
+            Make call to /run/ endpoint of HackerEarth API
+            """
+            r = requests.post(RUN_URL, data=run_data)
+            return JsonResponse(r.json(), safe=False)
+    else:
+        return HttpResponseForbidden()
+
+
+def savedCodeView(request, code_id):
+    # render the index.html
+    return render(request, 'nittutorial/editor.html', {})
+    
 def user_login_required(f):
         def wrap(request, *args, **kwargs):
                 if 'user_id' not in request.session.keys():
@@ -85,6 +225,24 @@ def post_content(request, title, id):
     print(tag)
     return render(request, 'nittutorial/post_content.html', { 'tutorials': tutorials, 'tutorial': tutorial,'tag':tag})
 
+def post_edit(request, title, id):
+    tutorial = get_object_or_404(Tutorial, pk=id)
+    if request.method=="POST":
+        form = TutorialForm(request.POST, instance=tutorial)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+            form.save_m2m()
+            return redirect('post_content', title=post.title, id=post.pk)
+    else:
+        form = TutorialForm(instance=tutorial)
+    return render(request, 'nittutorial/post_edit.html', {'form': form})
+
+def post_delete(request, title, id):
+    tutorial = get_object_or_404(Tutorial, pk=id)
+    tutorial.delete()
+    return redirect('nittutorial')
+
 def tutorial_new(request):
     if request.method == "POST":
         form = TutorialForm(request.POST)
@@ -94,7 +252,6 @@ def tutorial_new(request):
             post.save()
             form.save_m2m()
             tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
-            print(tutorials)
             return redirect('post_content', title=post.title, id=post.pk)
     else:
         form = TutorialForm()
@@ -145,55 +302,7 @@ def problems_display(request):
         tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
         return render(request, 'nittutorial/problems_display.html',{'tutorials': tutorials,'data':parsedData})
         #return HttpResponse(jsonList[0]["result"]["problems"][0]['name'])
-def editor(request):
-    tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
-    return render(request, 'nittutorial/editor.html',{'tutorials': tutorials})
-def compile(request):
-    if request.method == 'POST':
-        code=request.POST.get('code')
-        print(code);
-        Compile_URL = u'http://api.hackerearth.com/code/compile/'
-        CLIENT_SECRET = 'fee4190d6e63d82853d4cb30495a2a0ecaf7e9bf'
-        source = code
-        data = {
-        'client_secret': CLIENT_SECRET,
-        'async': 0,
-        'source': source,
-        'lang': "PYTHON",
-        'time_limit': 5,
-        'memory_limit': 262144,
-         }
-        jsonList=[]
-        req = requests.post(Compile_URL, data=data)
-        jsonList.append(json.loads(req.text))
-        return HttpResponse(jsonList[0]['compile_status'])
-def run(request):
-    if request.method == 'POST':
-        code=request.POST.get('code')
-        language=request.POST.get('language')
-        Run_URL = u'http://api.hackerearth.com/code/run/'
-        CLIENT_SECRET = 'fee4190d6e63d82853d4cb30495a2a0ecaf7e9bf'
-        source = code
-        data = {
-        'client_secret': CLIENT_SECRET,
-        'async': 0,
-        'source': source,
-        'lang': language,
-        'time_limit': 5,
-        'memory_limit': 262144,
-         }
-        jsonList=[]
-        req = requests.post(Run_URL, data=data)
-        jsonList.append(json.loads(req.text))
-        parsedData = []
-        userData = {}
-        userData['compile_status']=jsonList[0]['compile_status']
-        userData['status']=jsonList[0]['run_status']['status']
-        userData['time_used']=jsonList[0]['run_status']['time_used']
-        userData['memory_used']=jsonList[0]['run_status']['memory_used']
-        userData['output_html']=jsonList[0]['run_status']['output_html']
-        parsedData.append(userData)
-        return HttpResponse(parsedData)
+    
 def home(request):
     return render(request,'nittutorial/index.html')
 

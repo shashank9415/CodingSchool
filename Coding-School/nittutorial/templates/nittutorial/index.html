@@ -123,7 +123,13 @@
           <ul class="nav navbar-nav" id="horizontal">
             <li class="active"><a href="/nittutorial/">Tutorial</a></li>
             {% for tutorial in tutorials %}
-            <li><a href=q>{{ tutorial.title }}</a></li>
+            <li>
+            <p>
+            <a href="{% url 'post_content' title=tutorial.title id=tutorial.pk %}">{{ tutorial.title }}</a>
+            <a href="{% url 'post_edit' title=tutorial.title id=tutorial.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a href="{% url 'post_delete' title=tutorial.title id=tutorial.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+            </p>
+            </li>
             {% endfor %}
           </ul>
         </div><!--/.nav-collapse -->
