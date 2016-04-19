@@ -8,10 +8,12 @@
 		<script src="{% static 'nittutorial/js/editor.js' %}"></script>
 		<script>
 			$(document).ready(function() {
+				var con = $("#id_content").text();
 				$("#id_content").Editor();
+				$("#id_content").Editor("setText",con);
 			$("#s2").click(function () {
                     $('#id_content').text($('#id_content').Editor("getText", ["<button>"]));
-                    $('#preview').append($('#id_content').val());
+                    alert($('#id_content').text());
                 });
 			});
 		</script>
