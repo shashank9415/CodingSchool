@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% load mkrange %}
-
+<script src="{% static 'nittutorial/paginator/jquery.twbsPagination.min.js' %}"></script>
+    
 {% block content %}
  Categories
           {% for tag in tags %}
@@ -46,8 +47,20 @@
                     </div> <!-- end back panel -->
                 </div> <!-- end card -->
             </div> <!-- end card-container -->
+
         </div> <!-- end col sm 3 -->
         {% empty %}
       There are no tutorials, sorry.
     {% endfor %}
+    <ul id="pagination-demo" class="pagination-sm"></ul>
+
+    <script >
+    $('#pagination-demo').twbsPagination({
+        totalPages: 35,
+        visiblePages: 7,
+        onPageClick: function (event, page) {
+            $('#page-content').text('Page ' + page);
+        }
+    });
+</script>
 {% endblock %}
