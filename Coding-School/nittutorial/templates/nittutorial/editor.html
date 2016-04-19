@@ -1,14 +1,11 @@
+{% extends 'nittutorial/homepage.html' %}
 {% load staticfiles %}
+{% load mkrange %}
+{% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>hackIDE | Online Code Editor, Compiler &amp; Interpreter</title>
-        
+    
         <meta name="author" content="sahildua2305" />
         <meta property="og:url" content="http://hackide.herokuapp.com/"/>
         <meta property="og:site_name" content=" hackIDE "/>
@@ -20,16 +17,18 @@
         <meta name="keywords" content="hackide, ideone, online editor, online code editor, online code compiler, online python compiler, online code interpreter, online ide, hackerearth api ide, sahildua, sahildua2305, sahil2305dua, Sahil, Sahil Dua, Netaji Subhas Institute, New Delhi, sahil nsit, sahil collegespace, sahil developer, API developer">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" type="text/css" href="{% static 'nittutorial/css/bootstrap.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'nittutorial/css/custom.css' %}" />
 
-    </head>
-    <body>
 
         <!-- Hidden input field containing CSRF token required for making AJAX calls to Django -->
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
 
-    <nav class="navbar navbar-default">
+    
+
+      <div class="container">
+
+     <!--  <div class="row">
+        <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
           <a class="navbar-brand" href="/"> hackIDE </a>
@@ -38,13 +37,11 @@
           <li><a href="/editor/"> New Code </a></li>
         </ul>
       </div>
-    </nav>
-
-      <div class="container">
-
+    </nav> -->
+     <!--  </div> -->
         <div class="row">
 
-          <div class="left col-md-12">
+          <div class="left col-md-10">
 
             <div id="editor-topbar">
 
@@ -134,7 +131,7 @@
         </div> <!-- END of row -->
 
         <div class="row">
-          <div class="col-md-12 right">
+          <div class="col-md-10 ">
             <div class="output-response-box">
               <div class="output-details">
                 <div class="output-details-info run-status">
@@ -234,6 +231,4 @@
         src="http://c.statcounter.com/9940142/0/b0991b09/1/"
         alt="site stats"></a></div></noscript>
         <!-- End of StatCounter Code for Default Guide -->
-
-    </body>
-</html>
+{% endblock %}

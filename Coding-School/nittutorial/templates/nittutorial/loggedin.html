@@ -1,11 +1,11 @@
-{% extends 'nittutorial/index.html' %}
+{% extends 'nittutorial/homepage.html' %}
 {% load staticfiles %}
 {% load mkrange %}
 
 {% block content %}
 
-	<H2>Welcome {{ full_name }}. You are now logged in.</H2>
-
+	<H2>Welcome {{ full_name }}. You are now logged in. {{request.session.user_id}}</H2>
+	This is your Dashboard
 	<a style="color:#555;" href="/accounts/logout">Logout</a>
 
 {% endblock %}

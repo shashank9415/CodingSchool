@@ -122,13 +122,17 @@
         <div class="navbar-collapse collapse sidebar-navbar-collapse">
           <ul class="nav navbar-nav" id="horizontal">
             <li class="active"><a href="/nittutorial/">Tutorial</a></li>
+
             {% for tutorial in tutorials %}
             <li>
-            <p>
-            <a href="{% url 'post_content' title=tutorial.title id=tutorial.pk %}">{{ tutorial.title }}</a>
+            <p>   
+            <a href="{% url 'post_content' title=tutorial.title id=tutorial.pk %}"> Author Id {{tutorial.authorId }} <br>
+                    User {{request.session.user_id}}{{ tutorial.title }}</a>
+            {% ifequal tutorial.authorId|add:"0" request.session.user_id|add:"0" %}
             <a href="{% url 'post_edit' title=tutorial.title id=tutorial.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
             <a href="{% url 'post_delete' title=tutorial.title id=tutorial.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
             </p>
+            {% endifequal %}
             </li>
             {% endfor %}
           </ul>

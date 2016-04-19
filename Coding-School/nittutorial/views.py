@@ -304,7 +304,7 @@ def problems_display(request):
         #return HttpResponse(jsonList[0]["result"]["problems"][0]['name'])
     
 def home(request):
-    return render(request,'nittutorial/index.html')
+    return render(request,'nittutorial/homepage.html')
 
 def search_titles(request):
     if(request.method == "POST"):
