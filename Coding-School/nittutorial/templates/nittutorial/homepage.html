@@ -18,7 +18,7 @@
 
     <!-- Custom CSS -->
     <link href="{% static 'nittutorial/css/sb-admin.css' %}" rel="stylesheet">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'nittutorial/css/jquery.tagsinput.css' %}" />
      <!-- Custom Fonts -->
     <link href="{% static 'nittutorial/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
     <
@@ -33,7 +33,14 @@
 
      <!-- jQuery -->
     <script src="{% static 'nittutorial/js/jquery.js' %}"></script>
-
+      <script src="{% static 'nittutorial/js/jquery.tagsinput.js' %}"></script>
+         <script src="{% static 'nittutorial/js/ajax.js' %}"></script>
+     <script type="text/javascript">
+  jQuery(function($) {
+    //alert(document.getElementById('search-text'));
+  $('#search-text').tagsInput();
+   });
+</script>
     
     <script>
     $(document).ready(function(e){
@@ -82,9 +89,11 @@
                     </ul>
                 </div>
                 <input type="hidden" name="search_param" value="all" id="search_param">         
-                <input type="text" class="form-control" name="x" placeholder="Search term...">
+                <input type="text" class="form-control" name="search" id="search-text" placeholder="Search term...">
+                   {% csrf_token %}
+
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    <button class="btn btn-default" id="mysearch" type="button"><span class="glyphicon glyphicon-search"></span></button>
                 </span>
             </div>
         </div>
@@ -172,10 +181,11 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{request.session.username}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
+                    {% if request.session.username %}
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                            <a href="/accounts/loggedin/"><i class="fa fa-fw fa-user"></i> Profile</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
@@ -185,8 +195,13 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="/accounts/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                            <a href="/accounts/logout"><i class="fa fa-fw fa-power-off"></i> Log Out </a>
                         </li>
+                     {% else %} 
+                             <li>
+                            <a href="/accounts/login/"><i class="fa fa-fw fa-user"></i> Login</a>
+                        </li>
+                      {% endif %}                 
                     </ul>
                 </li>
             </ul>
@@ -201,11 +216,12 @@
 
             {% for tutorial in tutorials %}
             <li>
-            <p>   
+            <p>   <div style="display: inline-block;">
             <a href="{% url 'post_content' title=tutorial.title id=tutorial.pk %}">{{ tutorial.title }}</a>
             {% ifequal tutorial.authorId|add:"0" request.session.user_id|add:"0" %}
             <a href="{% url 'post_edit' title=tutorial.title id=tutorial.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-            <a href="{% url 'post_delete' title=tutorial.title id=tutorial.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+            <a href="{% url 'post_delete' title=tutorial.title id=tutorial.pk %}" style="display: inline-block;"><span class="glyphicon glyphicon-remove"></span></a>
+            </div>
             </p>
             {% endifequal %}
             </li>
@@ -226,10 +242,6 @@
                                 <a href="#">Dropdown Item1</a>
                             </li>
                         </ul>
-                    </li>
-
-                    <li class="page-scroll">
-                        <a href="/accounts/login/">Log in</a>
                     </li>
                     <li class="active">
                         <a href="/problems_find/"><span class="glyphicon glyphicon-search"></span> Problem Search</a>
@@ -257,7 +269,7 @@
         <div id="page-wrapper" style="height:100%;">
 
             <div class="container-fluid" >
-
+            <div id="search-results"> </div>
               {% block content %}
               {% endblock%} 
 

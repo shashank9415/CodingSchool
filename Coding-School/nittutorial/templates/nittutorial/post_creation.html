@@ -10,7 +10,7 @@
 				$("#id_content").Editor("setText",con);
 			$("#s2").click(function () {
                     $('#id_content').text($('#id_content').Editor("getText", ["<button>"]));
-                    alert($('#id_content').text());
+                   // alert($('#id_content').text());
                 });
 			});
 		</script>
@@ -19,6 +19,8 @@
     <h1>Tutorial Creation </h1>
    
     <form method="post">{% csrf_token %}
+      {{form.errors}}
+     
     <div class="row">
     <div class="col-lg-8 form-group">
    		{% if form.topicId.errors %}
@@ -51,37 +53,10 @@
     		{% endfor %}
 		{% endif %}
                 <label for="{{ form.title.id_for_label }}">Title</label>
-                <input class="form-control" id="id_title"> 
+                <input class="form-control" id="id_title" name="title"> 
                 <p class="help-block">Enter Title of Tutorial</p>
     </div></div>
-    <div class="col-lg-8 form-group">
-   		{% if form.title.errors %}
-    		
-    		{% for error in form.title.errors %}
-        	 <div class="alert alert-danger">
-                         <strong>Oh snap!</strong> {{ error|escape }} 
-        	</div>
-    	
-    		{% endfor %}
-		{% endif %}
-                <label for="{{ form.title.id_for_label }}">Title</label>
-                <input class="form-control" id="id_authorId"> 
-                <p class="help-block">Enter Title of Tutorial</p>
-    </div></div>
-    <div class="col-lg-8 form-group">
-   		{% if form.title.errors %}
-    		
-    		{% for error in form.title.errors %}
-        	 <div class="alert alert-danger">
-                         <strong>Oh snap!</strong> {{ error|escape }} 
-        	</div>
-    	
-    		{% endfor %}
-		{% endif %}
-                <label for="{{ form.title.id_for_label }}">Title</label>
-                <input class="form-control" id="id_complexity"> 
-                <p class="help-block">Enter Title of Tutorial</p>
-    </div></div>
+   
      <div class="row">
     <div class="col-lg-8 form-group">
    		{% if form.subject.errors %}
@@ -93,7 +68,7 @@
     		{% endfor %}
 		{% endif %}
                 <label for="{{ form.complexity.id_for_label }}">Complexity</label>
-                 <select class="form-control" id="id_complexity1">
+                 <select class="form-control" id="id_complexity" name="complexity">
                                   <option>Easy</option>
                                   <option>Medium</option>
                                   <option>Hard</option>
@@ -112,7 +87,7 @@
     		
 		{% endif %}
                 <label for="{{ form.rating.id_for_label }}">Rating</label>
-                <input class="form-control" id="id_rating"> 
+                <input class="form-control" id="id_rating" name="rating"> 
                 <p class="help-block">Expected Rating </p>
     </div></div>
     
@@ -128,7 +103,7 @@
     		
 		{% endif %}
                 <label for="{{ form.slug.id_for_label }}">Slug (Optional)</label>
-                <input class="form-control" id="id_slug"> 
+                <input class="form-control" id="id_slug" name="slug"> 
                 <p class="help-block"> Tutorial Link</p>
     </div></div>
 
@@ -144,7 +119,7 @@
     		
 		{% endif %}
                 <label for="{{ form.tags.id_for_label }}">Tags</label>
-                <input class="form-control" id="id_tag"> 
+                <input class="form-control" id="id_tags" name="tags"> 
                 <p class="help-block">Tags(Comma seperated) </p>
     </div></div>
     
@@ -160,7 +135,7 @@
     		
 		{% endif %}
                 <label for="{{ form.content.id_for_label }}">Tutorial Content</label>
-                <input class="form-control" id="id_content"> 
+                <textarea class="form-control" rows="10" cols="40" id="id_content" name="content"></textarea> 
                 <p class="help-block">Add content of Tutorial</p>
     </div></div>
 

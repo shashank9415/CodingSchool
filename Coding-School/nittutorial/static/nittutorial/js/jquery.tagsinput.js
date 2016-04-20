@@ -179,8 +179,8 @@
       interactive:true,
       defaultText:'add a tag',
       minChars:0,
-      width:'300px',
-      height:'100px',
+      width:'100%',
+      
       autocomplete: {selectFirst: false },
       'hide':true,
       'delimiter':',',
@@ -188,7 +188,7 @@
       removeWithBackspace:true,
       placeholderColor:'#666666',
       autosize: true,
-      comfortZone: 20,
+      comfortZone: 10,
       inputPadding: 6*2
     },options);
 

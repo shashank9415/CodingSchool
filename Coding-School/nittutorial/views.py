@@ -174,7 +174,7 @@ def tut1(request):
 	#tutorials = Tutorials.objects.all()
     tutorials = Tutorial.objects.filter(publishedDate__lte=timezone.now()).order_by('publishedDate')
     #contents = Tutorials.objects.filter(contentId__contentId=12345)
-    return render(request, 'nittutorial/check.html', {'tutorials': tutorials})
+    return render(request, 'nittutorial/homepage.html', {'tutorials': tutorials})
 
 @user_login_required
 def forums(request):
@@ -246,7 +246,9 @@ def post_delete(request, title, id):
 def tutorial_new(request):
     if request.method == "POST":
         form = TutorialForm(request.POST)
+        print("hi",form)
         if form.is_valid():
+            print("hi")
             post = form.save(commit=False)
             post.publishedDate = timezone.now()
             post.save()
@@ -255,7 +257,7 @@ def tutorial_new(request):
             return redirect('post_content', title=post.title, id=post.pk)
     else:
         form = TutorialForm()
-    return render(request, 'nittutorial/post_edit.html', {'form': form})
+    return render(request, 'nittutorial/post_creation.html', {'form': form})
 
 def cf_profile(request):
     jsonList=[]
