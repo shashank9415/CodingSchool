@@ -5,7 +5,9 @@
  */
 
 /* Global Styles */
-
+#logout{
+    margin-left: 60%;
+}
 body {
     margin-top: 100px;
     background-color: #222;

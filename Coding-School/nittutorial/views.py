@@ -240,6 +240,7 @@ def post_edit(request, title, id):
 
 def post_delete(request, title, id):
     tutorial = get_object_or_404(Tutorial, pk=id)
+    print("hello")
     tutorial.delete()
     return redirect('nittutorial')
 
@@ -407,7 +408,7 @@ def login_user(request):
         return render_to_response('nittutorial/login.html',{'state':state, 'username': username}) #if it doesn't satisfy any role redirects to home only
 
 def loggedin_view(request):
-    return render(request,'nittutorial/loggedin.html', {"full_name": request.user.username})
+    return render(request,'nittutorial/loggedin.html', {"full_name": request.user.username,"email":request.user.email})
     
 def invalid_view(request):
     return  render(request,"nittutorial/invalid_login.html")
@@ -419,7 +420,7 @@ def logout_view(request):
     request.session.set_expiry(0)   
     request.session.modified=True
     auth.logout(request)
-    return  render(request,"nittutorial/logout.html")
+    return  render(request,"nittutorial/homepage.html")
 
 def register_user_account_view(request):
     if(request.method == "POST"):
