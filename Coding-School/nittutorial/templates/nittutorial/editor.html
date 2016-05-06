@@ -24,7 +24,11 @@
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
 
     
-
+      <style>
+      #shift{
+        margin-left: 100px;
+      }
+      </style>
       <div class="container">
 
      <!--  <div class="row">
@@ -114,7 +118,7 @@
               </label>
             </div>
             </div>
-            <div class="pull-right run-save-panel">
+            <div class="pull-right run-save-panel" margin-left="-100%" id="shift">
               <button class="btn btn-info" id="compile-code" data-toggle="tooltip" data-placement="top" title="Press Shift+Enter">Compile it!</button>
               <button class="btn btn-success" id="run-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+Enter">Hack(run) it!</button>
             </div>
@@ -177,7 +181,6 @@
 
       <footer class="container">
         <span class="pull-left"> Powered by <a href="https://www.hackerearth.com/docs/api/developers/code/v3/" target="_blank">HackerEarth API</a> </span>
-        <span class="pull-right"> Copyrights © <a href="http://sahildua.com" target="_blank">Sahil Dua</a> 2016 | Made with <span style="color: #f7403a">&hearts;</span> in India </span>
       </footer>
 
         <a href="https://github.com/sahildua2305/hackIDE" title="Fork me on GitHub" class="github-corner" target="_blank">
