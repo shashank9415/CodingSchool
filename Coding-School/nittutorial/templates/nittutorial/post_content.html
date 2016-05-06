@@ -8,12 +8,100 @@ $(document).ready(function(){
 	$("#content").append('{{tutorial.content}}');
 });
 </script>
-<h1>{{ tutorial.title }}</h1>
-<p id="content"></p>
-<h4>{{ tutorial.complexity }}</h4>
-<h4>Rating is : {{ tutorial.rating }}</h4>
-<h4>Publish Date : {{ tutorial.publishedDate }}</h4>
+<style>
+.title{
+	border-radius: 20px;
+  border-color: #AFD880;
+  border-width: 2px;
+  border-style: solid;
+  width: 300px;
+  height: 40px;
+  background:#AFD880;
+  margin-left: 35%;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 30px;
+	text-align: center;
+}
+#complexity{
+	font: 15px/15px 'Bree Serif', Georgia, serif;
+	text-align: center;
+	color:#FF6800;
+}
+#complexity{
+	font: 15px/15px 'Bree Serif', Georgia, serif;
+	text-align: center;
+}
+#bottom{
+	display:flex;
+	justify-content:space-between;
+}
+.content{
+	font: 20px/20px 'Bree Serif', Georgia, serif;
+	text-align: center;
+}
+#tags{
+	display:flex;
+	justify-content:space-between;
+}
+#individual{
+	border-radius: 20px;
+  border-color: #AFD880;
+  border-width: 2px;
+  border-style: solid;
+  width: 80px;
+  height: 40px;
+  background:#AFD880;
+
+}
+#rating{
+	border-radius: 20px;
+  border-color: #D4AA6E;
+  border-width: 2px;
+  border-style: solid;
+  width: 100px;
+  height: 40px;
+  background:#D4AA6E;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 15px;
+	text-align: center;
+}
+#publish{
+	border-radius: 20px;
+  border-color: #D4AA6E;
+  border-width: 2px;
+  border-style: solid;
+  width: 300px;
+  height: 40px;
+  background:#D4AA6E;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 15px;
+	text-align: center;
+}
+#display{
+border-radius: 20px;
+  border-color: #E6D975;
+  border-width: 2px;
+  border-style: solid;
+  width: 100%;
+  height: 300px;
+  background:#E6D975;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 15px;
+}
+</style>
+<div>
+<div class="title">{{ tutorial.title }}<br></div>
+<div id="complexity">Complexity is : {{ tutorial.complexity }}</div><br>
+<div id="display">{{ tutorial.content }}</div><br>
+<div id="bottom">
+<div id="rating">Rating is : {{ tutorial.rating }}</div>
+<div id="publish">Publish Date : {{ tutorial.publishedDate }}</div>
+</div>
+</div>
+<br>
+<div>
 {% for e in tag %}
-<h1>{{ e }}</h1>
+<span id="individual" class="content">{{ e }}</span>
 {% endfor %}
+</div>
 {% endblock %}
